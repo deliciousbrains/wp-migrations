@@ -18,7 +18,9 @@ class Migrator {
 	 * Bootstrap the CLI command
 	 */
 	public function init() {
-		\WP_CLI::add_command( 'dbi', Command::class );
+		if ( defined( 'WP_CLI' ) && WP_CLI ) {
+			\WP_CLI::add_command( 'dbi', Command::class );
+		}
 	}
 
 	/**
