@@ -1,0 +1,21 @@
+{
+  "name": "deliciousbrains/wp-migrations",
+  "description": "WordPress library for managing database table schema upgrades and data seeding",
+  "license": "GPL-2.0-or-later",
+  "authors": [
+    {
+      "name": "Delicious Brains",
+      "email": "nom@deliciousbrains.com",
+      "homepage": "https://deliciousbrains.com/"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "DeliciousBrains\\WPMigrations\\": "src/"
+    }
+  },
+  "require": {
+    "tareq1988/wp-eloquent": "^1.0",
+    "wp-cli/wp-cli": "^1.1"
+  }
+}
