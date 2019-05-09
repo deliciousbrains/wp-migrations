@@ -9,6 +9,12 @@
       "homepage": "https://deliciousbrains.com/"
     }
   ],
+  "repositories": [
+    {
+      "type": "git",
+      "url": "https://github.com/polevaultweb/wp-eloquent/"
+    }
+  ],
   "autoload": {
     "psr-4": {
       "DeliciousBrains\\WPMigrations\\": "src/"
