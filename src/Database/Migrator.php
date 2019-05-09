@@ -134,7 +134,13 @@ class Migrator {
 		foreach ( $migrations as $file => $name ) {
 			require_once $file;
 
-			$class     = __NAMESPACE__ . '\\' . $this->get_class_name( $name );
+			$class_name    = $this->get_class_name( $name );
+			$fq_class_name = $this->get_class_with_namespace( $class_name );
+			if ( false === $fq_class_name ) {
+				continue;
+			}
+
+			$class     = $fq_class_name;
 			$migration = new $class;
 			$method    = $rollback ? 'rollback' : 'run';
 			if ( ! method_exists( $migration, $method ) ) {
@@ -155,6 +161,17 @@ class Migrator {
 		}
 
 		return $count;
+	}
+
+	protected function get_class_with_namespace( $class_name ) {
+		$all_classes = get_declared_classes();
+		foreach ( $all_classes as $class ) {
+			if ( substr( $class, - strlen( $class_name ) ) === $class_name ) {
+				return $class;
+			}
+		}
+
+		return false;
 	}
 
 	protected function get_class_name( $name ) {
