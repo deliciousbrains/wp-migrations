@@ -64,8 +64,14 @@ class Migrator {
 	protected function get_migrations( $exclude = array(), $migration = null, $rollback = false ) {
 		$all_migrations = array();
 
-		$path = apply_filters( 'dbi_wp_migrations_path', __DIR__ . '/app/migrations' );
-		$migrations     = glob( trailingslashit( $path ) . '*.php' );
+		$base_path = __FILE__;
+		while ( basename( $base_path ) != 'vendor' ) {
+			$base_path = dirname( $base_path );
+		}
+
+		$path = apply_filters( 'dbi_wp_migrations_path', dirname( $base_path ) . '/app/migrations' );
+
+		$migrations = glob( trailingslashit( $path ) . '*.php' );
 		if ( empty( $migrations ) ) {
 			return $all_migrations;
 		}
