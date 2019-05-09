@@ -19,7 +19,7 @@ class Migrator {
 	 */
 	public function init() {
 		if ( defined( 'WP_CLI' ) && WP_CLI ) {
-			\WP_CLI::add_command( 'dbi', Command::class );
+			\WP_CLI::add_command( 'dbi migrate', Command::class );
 		}
 	}
 
