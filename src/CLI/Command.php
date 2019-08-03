@@ -18,8 +18,8 @@ class Command extends \WP_CLI_Command {
 	 * [--setup]
 	 * : Set up the migrations table
 	 *
-	 * @param $args
-	 * @param $assoc_args
+	 * @param array $args
+	 * @param array $assoc_args
 	 *
 	 * @throws \WP_CLI\ExitException
 	 */

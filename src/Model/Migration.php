@@ -22,9 +22,11 @@ class Migration extends Model {
 	];
 
 	/**
-	 * @var string
+	 * @var array
 	 */
-	protected $guarded = [ 'id' ];
+	protected $guarded = [
+		'id',
+	];
 
 	/**
 	 * @var bool
