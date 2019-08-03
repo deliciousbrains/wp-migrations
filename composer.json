@@ -22,6 +22,6 @@
   },
   "require": {
     "tareq1988/wp-eloquent": "dev-master",
-    "wp-cli/wp-cli": "^1.1"
+    "wp-cli/wp-cli": "^2.2.0"
   }
 }
