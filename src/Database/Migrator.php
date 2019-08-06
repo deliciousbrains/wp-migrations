@@ -8,16 +8,25 @@ use DeliciousBrains\WPMigrations\Model\Migration;
 class Migrator {
 
 	/**
-	 * Migrator constructor.
+	 * @var Migrator
 	 */
-	public function __construct() {
-		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-	}
+	private static $instance;
 
 	/**
-	 * Bootstrap the CLI command
+	 * @return Migrator Instance
 	 */
+	public static function instance() {
+		if ( ! isset( self::$instance ) && ! ( self::$instance instanceof Migrator ) ) {
+			self::$instance = new Migrator();
+			self::$instance->init();
+		}
+
+		return self::$instance;
+	}
+
 	public function init() {
+		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+
 		if ( defined( 'WP_CLI' ) && WP_CLI ) {
 			\WP_CLI::add_command( 'dbi migrate', Command::class );
 		}
@@ -180,5 +189,24 @@ class Migrator {
 		$string = ucwords( str_replace( array( '-', '_' ), ' ', $string ) );
 
 		return str_replace( ' ', '', $string );
+	}
+
+	/**
+	 * Protected constructor to prevent creating a new instance of the
+	 * class via the `new` operator from outside of this class.
+	 */
+	protected function __construct() {
+	}
+
+	/**
+	 * As this class is a singleton it should not be clone-able
+	 */
+	protected function __clone() {
+	}
+
+	/**
+	 * As this class is a singleton it should not be able to be unserialized
+	 */
+	protected function __wakeup() {
 	}
 }

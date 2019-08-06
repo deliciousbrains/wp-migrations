@@ -21,7 +21,7 @@ You need to have access to run WP CLI on the server. Typically `wp dbi migrate` 
 ### Installation
 
 - `composer require deliciousbrains/wp-migrations`
-- Bootstrap the package by adding `( new \DeliciousBrains\WPMigrations\Database\Migrator() )->init();` to an mu-plugin.
+- Bootstrap the package by adding `\DeliciousBrains\WPMigrations\Database\Migrator::instance();` to an mu-plugin.
 
 ### Migrations
 

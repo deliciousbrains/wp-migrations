@@ -24,7 +24,7 @@ class Command extends \WP_CLI_Command {
 	 * @throws \WP_CLI\ExitException
 	 */
 	public function __invoke( $args, $assoc_args ) {
-		$migrator = new \DeliciousBrains\WPMigrations\Database\Migrator();
+		$migrator = \DeliciousBrains\WPMigrations\Database\Migrator::instance();
 
 		if ( isset( $assoc_args['setup'] ) ) {
 			if ( ! $migrator->setup() ) {
