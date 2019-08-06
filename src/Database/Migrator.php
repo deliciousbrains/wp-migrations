@@ -55,9 +55,9 @@ class Migrator {
 	/**
 	 * Get all the migration files
 	 *
-	 * @param array $exclude   filenames without extension to exclude
-	 * @param null  $migration Single migration class name to only perform the migration for
-	 * @param bool  $rollback
+	 * @param array       $exclude   Filenames without extension to exclude
+	 * @param string|null $migration Single migration class name to only perform the migration for
+	 * @param bool        $rollback
 	 *
 	 * @return array
 	 */
@@ -101,10 +101,8 @@ class Migrator {
 	/**
 	 * Get all the migrations to be run
 	 *
-	 * @param null $migration
-	 *
-	 * @param bool $rollback
-	 *
+	 * @param string|null $migration
+	 * @param bool        $rollback
 	 * @return array
 	 */
 	protected function get_migrations_to_run( $migration = null, $rollback = false ) {
@@ -119,7 +117,7 @@ class Migrator {
 	/**
 	 * Run the migrations
 	 *
-	 * @param null|string $migration
+	 * @param string|null $migration
 	 * @param bool        $rollback
 	 *
 	 * @return int
