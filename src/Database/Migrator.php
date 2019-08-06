@@ -78,9 +78,15 @@ class Migrator {
 			$base_path = dirname( $base_path );
 		}
 
-		$path = apply_filters( 'dbi_wp_migrations_path', dirname( $base_path ) . '/app/migrations' );
+		$path  = apply_filters( 'dbi_wp_migrations_path', dirname( $base_path ) . '/app/migrations' );
+		$paths = apply_filters( 'dbi_wp_migrations_paths', array( $path ) );
 
-		$migrations = glob( trailingslashit( $path ) . '*.php' );
+		$migrations = array();
+		foreach ( $paths as $path ) {
+			$path_migrations = glob( trailingslashit( $path ) . '*.php' );
+			$migrations      = array_merge( $migrations, $path_migrations );
+		}
+
 		if ( empty( $migrations ) ) {
 			return $all_migrations;
 		}

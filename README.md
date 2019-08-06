@@ -25,7 +25,8 @@ You need to have access to run WP CLI on the server. Typically `wp dbi migrate` 
 
 ### Migrations
 
-By default, the command will look for migration files in `/app/migrations` directory alongside the vendor folder. This directory can be altered with the filter `dbi_wp_migrations_path`.
+By default, the command will look for migration files in `/app/migrations` directory alongside the vendor folder. This can be altered with the filter `dbi_wp_migrations_path`.
+Other paths can be added using the `dbi_wp_migrations_paths` filter. 
 
 An example migration to create a table would look like:
 
