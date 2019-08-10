@@ -13,22 +13,27 @@ class Migrator {
 	private static $instance;
 
 	/**
+	 * @param string $command_name
+	 *
 	 * @return Migrator Instance
 	 */
-	public static function instance() {
+	public static function instance( $command_name = 'dbi ') {
 		if ( ! isset( self::$instance ) && ! ( self::$instance instanceof Migrator ) ) {
 			self::$instance = new Migrator();
-			self::$instance->init();
+			self::$instance->init( $command_name );
 		}
 
 		return self::$instance;
 	}
 
-	public function init() {
+	/**
+	 * @param string $command_name
+	 */
+	public function init( $command_name ) {
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 
 		if ( defined( 'WP_CLI' ) && WP_CLI ) {
-			\WP_CLI::add_command( 'dbi migrate', Command::class );
+			\WP_CLI::add_command( $command_name . ' migrate', Command::class );
 		}
 	}
 
