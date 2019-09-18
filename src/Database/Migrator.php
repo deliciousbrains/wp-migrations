@@ -17,7 +17,7 @@ class Migrator {
 	 *
 	 * @return Migrator Instance
 	 */
-	public static function instance( $command_name = 'dbi ') {
+	public static function instance( $command_name = 'dbi') {
 		if ( ! isset( self::$instance ) && ! ( self::$instance instanceof Migrator ) ) {
 			self::$instance = new Migrator();
 			self::$instance->init( $command_name );
