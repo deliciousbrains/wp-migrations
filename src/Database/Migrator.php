@@ -3,7 +3,6 @@
 namespace DeliciousBrains\WPMigrations\Database;
 
 use DeliciousBrains\WPMigrations\CLI\Command;
-use DeliciousBrains\WPMigrations\Model\Migration;
 
 class Migrator {
 
@@ -11,6 +10,8 @@ class Migrator {
 	 * @var Migrator
 	 */
 	private static $instance;
+
+	protected $table_name = 'dbrns_migrations';
 
 	/**
 	 * @param string $command_name
@@ -45,7 +46,7 @@ class Migrator {
 	public function setup() {
 		global $wpdb;
 
-		$table = $wpdb->prefix . 'dbrns_migrations';
+		$table = $wpdb->prefix . $this->table_name;
 
 		if ( $wpdb->get_var( "SHOW TABLES LIKE '$table'" ) === $table ) {
 			return false;
@@ -126,8 +127,9 @@ class Migrator {
 	 * @return array
 	 */
 	protected function get_migrations_to_run( $migration = null, $rollback = false ) {
-		$ran_migrations = Migration::all();
-		$ran_migrations = $ran_migrations->pluck( 'name' )->all();
+		global $wpdb;
+		$table = $wpdb->prefix . $this->table_name;
+		$ran_migrations = $wpdb->get_col( "SELECT name FROM $table");
 
 		$migrations = $this->get_migrations( $ran_migrations, $migration, $rollback );
 
@@ -143,6 +145,8 @@ class Migrator {
 	 * @return int
 	 */
 	public function run( $migration = null, $rollback = false ) {
+		global $wpdb;
+		$table = $wpdb->prefix . $this->table_name;
 		$count      = 0;
 		$migrations = $this->get_migrations_to_run( $migration, $rollback );
 		if ( empty( $migrations ) ) {
@@ -169,13 +173,11 @@ class Migrator {
 			$count ++;
 
 			if ( $rollback ) {
-				Migration::firstOrFail()->where( 'name', $name )->delete();
+				$wpdb->delete( $table, array( 'name' => $name ) );
 				continue;
 			}
 
-			$migration_record       = new Migration();
-			$migration_record->name = $name;
-			$migration_record->save();
+			$wpdb->insert( $table, array( 'name' => $name, 'date_ran' => date("Y-m-d H:i:s") ) );
 		}
 
 		return $count;
