@@ -1,0 +1,19 @@
+<?php
+
+use DeliciousBrains\WPMigrations\Database\AbstractMigration;
+
+class {{ class }} extends AbstractMigration {
+
+	/**
+	 * Run the migration.
+	 */
+	public function run() {
+	}
+
+	/**
+	 * Optional: Roll back the migration.
+	 */
+	public function rollback() {
+	}
+
+}
