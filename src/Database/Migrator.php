@@ -14,14 +14,20 @@ class Migrator {
 	protected $table_name = 'dbrns_migrations';
 
 	/**
+	 * @var string
+	 */
+	protected $vendor_basename = 'vendor';
+
+	/**
 	 * @param string $command_name
+	 * @param string $vendor_basename
 	 *
 	 * @return Migrator Instance
 	 */
-	public static function instance( $command_name = 'dbi') {
+	public static function instance( $command_name = 'dbi', $vendor_basename = 'vendor') {
 		if ( ! isset( self::$instance ) && ! ( self::$instance instanceof Migrator ) ) {
 			self::$instance = new Migrator();
-			self::$instance->init( $command_name );
+			self::$instance->init( $command_name, $vendor_basename );
 		}
 
 		return self::$instance;
@@ -29,8 +35,10 @@ class Migrator {
 
 	/**
 	 * @param string $command_name
+	 * @param string $vendor_basename
 	 */
-	public function init( $command_name ) {
+	public function init( $command_name, $vendor_basename ) {
+		$this->vendor_basename = $vendor_basename;
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 
 		if ( defined( 'WP_CLI' ) && WP_CLI ) {
@@ -80,7 +88,7 @@ class Migrator {
 		$all_migrations = array();
 
 		$base_path = __FILE__;
-		while ( basename( $base_path ) != 'vendor' ) {
+		while ( basename( $base_path ) != $this->vendor_basename ) {
 			$base_path = dirname( $base_path );
 		}
 
