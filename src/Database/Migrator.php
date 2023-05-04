@@ -2,7 +2,8 @@
 
 namespace DeliciousBrains\WPMigrations\Database;
 
-use DeliciousBrains\WPMigrations\CLI\Command;
+use DeliciousBrains\WPMigrations\CLI\Migrate;
+use DeliciousBrains\WPMigrations\CLI\Scaffold;
 
 class Migrator {
 
@@ -34,7 +35,8 @@ class Migrator {
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 
 		if ( defined( 'WP_CLI' ) && WP_CLI ) {
-			\WP_CLI::add_command( $command_name . ' migrate', Command::class );
+			\WP_CLI::add_command( $command_name . ' migrate', Migrate::class );
+            \WP_CLI::add_command( 'scaffold migration', Scaffold::class );
 		}
 	}
 
@@ -79,12 +81,7 @@ class Migrator {
 	protected function get_migrations( $exclude = array(), $migration = null, $rollback = false ) {
 		$all_migrations = array();
 
-		$base_path = __FILE__;
-		while ( basename( $base_path ) != 'vendor' ) {
-			$base_path = dirname( $base_path );
-		}
-
-		$path  = apply_filters( 'dbi_wp_migrations_path', dirname( $base_path ) . '/app/migrations' );
+		$path  = $this->get_migrations_path();
 		$paths = apply_filters( 'dbi_wp_migrations_paths', array( $path ) );
 
 		$migrations = array();
@@ -117,6 +114,21 @@ class Migrator {
 		}
 
 		return $all_migrations;
+	}
+
+	/**
+	 * Get the default migrations folder path.
+	 *
+	 * @return string
+	 */
+	protected function get_migrations_path() {
+		$base_path = __FILE__;
+
+		while ( basename( $base_path ) != 'vendor' ) {
+			$base_path = dirname( $base_path );
+		}
+
+		return apply_filters( 'dbi_wp_migrations_path', dirname( $base_path ) . '/app/migrations' );
 	}
 
 	/**
@@ -202,6 +214,53 @@ class Migrator {
 		$string = ucwords( str_replace( array( '-', '_' ), ' ', $string ) );
 
 		return str_replace( ' ', '', $string );
+	}
+
+	/**
+	 * Scaffold a new migration using the stub from the `stubs` directory.
+	 *
+	 * @param string $migration_name Camel cased migration name, e.g. myMigration.
+	 *
+	 * @return string|WP_Error Name of created migration file on success, WP_Error
+	 *                         instance on failure.
+	 */
+	public function scaffold( $migration_name ) {
+		$migrations_path = $this->get_migrations_path();
+
+		// Create migrations dir if it doesn't exist already.
+		if ( ! is_dir( $migrations_path ) ) {
+			if ( ! mkdir( $migrations_path, 0755 ) ) {
+				return new \WP_Error(
+					'migrations_folder_error',
+					"Unable to create migrations folder {$migrations_path}"
+				);
+			}
+		}
+
+		$stub_dir  = dirname( dirname( __DIR__ ) ) . '/stubs';
+		$stub_path = apply_filters( 'dbi_migration_stub_path', "{$stub_dir}/migration.stub" );
+		$stub      = file_get_contents( $stub_path );
+
+		if ( ! $stub ) {
+			return new \WP_Error(
+				'stub_file_error',
+				"Unable to create migration file: Couldn't read from stub {$stub_path}."
+			);
+		}
+
+		$date        = date( 'Y_m_d' );
+		$filename    = "{$date}_{$migration_name}.php";
+		$file_path   = "{$migrations_path}/{$filename}";
+		$boilerplate = str_replace( '{{ class }}', $migration_name, $stub );
+
+		if ( ! file_put_contents( $file_path, $boilerplate ) ) {
+			return new \WP_Error(
+				'file_creation_error',
+				"Unable to create migration file {$migration_path}."
+			);
+		}
+
+		return $filename;
 	}
 
 	/**

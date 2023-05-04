@@ -2,7 +2,7 @@
 
 namespace DeliciousBrains\WPMigrations\CLI;
 
-class Command extends \WP_CLI_Command {
+class Migrate extends \WP_CLI_Command {
 
 	/**
 	 * Data migration command

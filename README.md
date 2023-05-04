@@ -88,3 +88,5 @@ class AddPricingPage extends AbstractMigration {
 You can run specific migrations using the filename as an argument, eg. `wp dbi migrate AddCustomTable`.
 
 To rollback all migrations you can run `wp dbi migrate --rollback`, or just a specific migration `wp dbi migrate AddCustomTable --rollback`.
+
+To quickly scaffold a new migration you can run `wp scaffold migration <name>`. For example, `wp scaffold migration MyMigration` will create a new class named `MyMigration` in the default migration files directory with the correct filename and all required boilerplate code.
