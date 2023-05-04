@@ -2,7 +2,8 @@
 
 namespace DeliciousBrains\WPMigrations\Database;
 
-use DeliciousBrains\WPMigrations\CLI\Command;
+use DeliciousBrains\WPMigrations\CLI\Migrate;
+use DeliciousBrains\WPMigrations\CLI\Scaffold;
 
 class Migrator {
 
@@ -34,7 +35,8 @@ class Migrator {
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 
 		if ( defined( 'WP_CLI' ) && WP_CLI ) {
-			\WP_CLI::add_command( $command_name . ' migrate', Command::class );
+			\WP_CLI::add_command( $command_name . ' migrate', Migrate::class );
+            \WP_CLI::add_command( 'scaffold migration', Scaffold::class );
 		}
 	}
 

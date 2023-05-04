@@ -2,7 +2,7 @@
 
 namespace DeliciousBrains\WPMigrations\CLI;
 
-class Command extends \WP_CLI_Command {
+class Migrate extends \WP_CLI_Command {
 
 	/**
 	 * Data migration command
@@ -17,9 +17,6 @@ class Command extends \WP_CLI_Command {
 	 *
 	 * [--setup]
 	 * : Set up the migrations table
-	 *
-	 * [--scaffold]
-	 * : Scaffold a new migration class using the migration stub
 	 *
 	 * @param array $args
 	 * @param array $assoc_args
@@ -42,20 +39,6 @@ class Command extends \WP_CLI_Command {
 		$migration = null;
 		if ( ! empty( $args[0] ) ) {
 			$migration = $args[0];
-		}
-
-		if ( isset( $assoc_args['scaffold'] ) ) {
-			if ( ! $migration ) {
-				return \WP_CLI::error( 'Migration name must be specified when using --scaffold' );
-			}
-
-			$filename = $migrator->scaffold( $migration );
-
-			if ( is_wp_error( $filename ) ) {
-				return \WP_ClI::error( $filename->get_error_message() );
-			}
-
-			return \WP_CLI::success( "Created {$filename}!" );
 		}
 
 		$rollback = false;
